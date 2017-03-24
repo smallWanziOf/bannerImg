@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style type="text/css">
+	#parent{
+		margin:0 auto;
+		width:800px;
+		height:300px;
+		border:1px solid #000;
+		position:relative;
+		overflow:hidden;
+	}
+	#order{
+		text-align:center;
+		margin:0 auto;
+		width:800px;
+		height:50px;
+		position:relative;
+		bottom:60px;
+		color:#fff;
+	}
+	#child{
+		width:4000px;
+		height:300px;
+		position:absolute;
+		left:0;
+	}
+	#parent ul,li{
+		height:300px;
+		padding:0;margin:0;list-style:none;
+		float:left;
+	}
+	#parent  ul{
+		position:relative;
+		left:0;
+		transition:all 0.5s ease; 
+	}
+	#order ul{
+		margin-left:45%;list-style:none;padding:0;
+	}
+	#order li{width:20px;height:20px;border-radius:45%;cursor:pointer;color:#fff;margin:5px;border:1px solid #fff;}
+	#order .active{background-color:red;}
+  </style>
+ </head>
+ <body>
+ <div>
+    <div id="parent">
+		<div id="child">
+			<ul id="ul">
+			</ul>
+		</div>
+    </div>	
+	<div id="order">
+		<ul>
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ul>
+	</div>	
+  </div>
+  <script type="text/javascript" src="js/jquery-1.11.3.js"></script>
+  <script type="text/javascript">
+	var imgarr=[
+		"img/1.jpg",
+		"img/2.jpg",
+		"img/3.jpg",
+		"img/4.jpg",
+		"img/1.jpg"
+	]
+	var bannerImg={
+		str:'',
+		num:0,
+		starttime:2000,
+		liactive:0,
+		timer:null,
+		canclick:true,
+		init:function(){
+			var me=this;
+			for(var i=0;i<imgarr.length;i++){
+				this.str+="<li><img src='"+imgarr[i]+"'/></li>";
+			}
+			$("#ul").html(this.str);
+			this.timer=setInterval(this.animate.bind(this),me.starttime);
+			$("#order li").click(function(){
+				var index=$(this).index();
+				me.liactive=index;
+				$("#ul").css("transform","translate3d(-"+index*800+"px,0,0)");
+				$("#ul").css("transition","all 0.5s ease");
+				me.num=index*800;
+				$("#order>ul>li:eq("+index+")").addClass("active").siblings().removeClass("active");
+			})
+			$("#parent,#order").hover(function(){
+				clearInterval(me.timer);
+				me.timer=null;
+			},function(){
+				me.timer=setInterval(me.animate.bind(me),me.starttime);
+			})
+		},
+		animate:function(){
+			var me = this;
+			this.num+=800;
+			if(this.num==3200){
+				this.click=false;
+				$("#ul").css("transform","translate3d(-"+this.num+"px,0,0)");
+				$("#ul").css("transition","all 0.5s ease");
+				this.liactive=0;
+				$("#order>ul>li:eq("+this.liactive+")").addClass("active").siblings().removeClass("active");
+				setTimeout(function(){
+					$("#ul").css("transform","translate3d(0,0,0)");
+					$("#ul").css("transition","none");
+					me.num=0;
+				},500)
+			}else{
+				this.click=true;
+				this.starttime=2000;
+				this.liactive+=1;
+				$("#order>ul>li:eq("+this.liactive+")").addClass("active").siblings().removeClass("active");
+				$("#ul").css("transform","translate3d(-"+this.num+"px,0,0)");
+				$("#ul").css("transition","all 0.5s ease");
+			}
+		}
+	}
+	window.onload=function(){
+		bannerImg.init();
+	}
+  </script>
+ </body>
+</html>
